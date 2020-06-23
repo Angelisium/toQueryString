@@ -32,10 +32,10 @@ const toQueryString= (a,z)=> {
 			for(let b=0;b<a.length;b++) {
 				let c= toQueryString(a[b], z+1);
 				if(TQSRT(c)==="Array") {
-                    for(let d in c) {
+					for(let d in c) {
 						q.push(`[]${c[d]}`);
 					}
-                } else {
+				} else {
 					q.push(`[]${c}`);
 				}
 			}
@@ -48,13 +48,13 @@ const toQueryString= (a,z)=> {
 			for(let b=0,c=Object.keys(a);b<c.length;b++) {
 				let d= toQueryString(a[c[b]],z+1);
 				if(TQSRT(d)==="Array") {
-                    for(let e=0;e<d.length;e++) {
-                        r.push(`${(z<1)?c[b]:`[${c[b]}]`}${d[e]}`);
-                    }
-                } else {
+					for(let e=0;e<d.length;e++) {
+						r.push(`${(z<1)?c[b]:`[${c[b]}]`}${d[e]}`);
+					}
+				} else {
 					r.push(`${(z<1)?c[b]:`[${c[b]}]`}${d}`);
 				}
-            }
+			}
 			if(z<1) {
 				return r.join('&');
 			} return r;
