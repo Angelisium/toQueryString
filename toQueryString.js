@@ -21,16 +21,35 @@
 // toQueryString => The main function. In argument the variable to serialize.
 
 const toQueryString = (function() {
+	/**
+	 * A function to retrieve more precisely the type of a variable, inspired by :
+	 * https://medium.com/better-programming/what-is-object-object-in-javascript-object-prototype-tostring-1db888c695a4
+	 * 
+	 * @returns {string} The type of variable.
+	 * @param {*} a - Any variable
+	 */
 	function RealTypeOf(a) {
 		let _class = Object.prototype.toString.call(a);
 			typeOf = _class.replace(/^.*? (.*?)\]$/, '$1');
 		return typeOf;
 	}
 	class Serializer {
+		/**
+		 * This function is used to initialize the serialize method.
+		 * 
+		 * @return {serialize} The serialized variable.
+		 * @param {*} variable - The variable to serialize.
+		 */
 		static init(variable) {
 			let _serializer = new Serializer();
 			return _serializer.serialize(variable, 0);
 		}
+		/**
+		 * The main function, this function serializes the variable according to his type.
+		 * 
+		 * @param {*} variable 
+		 * @param {number} indent 
+		 */
 		serialize(variable, indent) {
 			let type = RealTypeOf(variable);
 			if(!this[`_${type}`]) {
@@ -41,21 +60,41 @@ const toQueryString = (function() {
 				return this[`_${type}`](variable, indent);
 			}
 		}
+		/**
+		 * @returns {string}
+		 * @param {*} variable 
+		 * @param {number} indent 
+		 */
 		mnull(variable, indent) {
 			if(indent<1) {
 				return "null";
 			} return "=null";
 		}
+		/**
+		 * @returns {string}
+		 * @param {number} variable 
+		 * @param {number} indent 
+		 */
 		_Number(variable, indent) {
 			if(indent<1) {
 				return variable.toString();
 			} return `=${variable}`;
 		}
+		/**
+		 * @returns {string}
+		 * @param {string} variable 
+		 * @param {number} indent 
+		 */
 		_String(variable, indent) {
 			if(indent<1) {
 				return encodeURI(variable);
 			} return `=${encodeURI(variable)}`;
 		}
+		/**
+		 * @returns {string|array}
+		 * @param {array} variable 
+		 * @param {number} indent 
+		 */
 		_Array(variable, indent) {
 			let result= [];
 			for(let item of variable) {
@@ -73,6 +112,11 @@ const toQueryString = (function() {
 				return result.join('&');
 			} return result;
 		}
+		/**
+		 * @returns {string|array}
+		 * @param {object} variable 
+		 * @param {number} indent 
+		 */
 		_Object(variable, indent) {
 			let result = [],
 				keys = Object.keys(variable);
